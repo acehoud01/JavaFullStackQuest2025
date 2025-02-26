@@ -40,19 +40,19 @@ This repository serves as a roadmap for my journey to becoming a full-stack deve
 ---
 
 ## 📂 **Repository Structure**
-FullStack-Developer-Journey-2025/
+Java_fullStackQuest2025/
 
-├── Phase-1-Foundation/  #Weeks 1-4: Java Basics, OOP, Data Structures, Git **
+├── Phase-1-Foundation/ 
 
-├── Phase-2-BackEnd/ # Weeks 5-12: Spring Boot, Databases, Microservices
+├── Phase-2-BackEnd/
 
-├── Phase-3-FrontEnd/ # Weeks 13-20: HTML, CSS, JavaScript, React
+├── Phase-3-FrontEnd/
 
-├── Phase-4-Cloud-Deployment/ # Weeks 21-26: Docker, Kubernetes, AWS/Azure
+├── Phase-4-Cloud-Deployment/
 
-├── Phase-5-Final-Projects/ # Weeks 27-30: Full-Stack Projects
+├── Phase-5-Final-Projects/
 
-├── Resources/ # Links to tutorials, books, and documentation
+├── Resources/ 
 
 └── README.md # This file
 
