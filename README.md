@@ -1,8 +1,4 @@
 # Java_fullStackQuest2025
-
-<<<<<<< HEAD
-
-=======
 Welcome to my **FullStack Developer Journey** repository! This repository documents my learning path, projects, and progress as I transition from a beginner to a full-stack developer by **August 31, 2025**. 
 
 ## 🚀 **About This Repository**
