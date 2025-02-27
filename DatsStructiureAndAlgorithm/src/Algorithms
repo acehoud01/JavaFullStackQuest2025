@@ -1,0 +1,26 @@
+LineaSearch:
+1.Start the program.
+2.Define a generic method searchMethod that takes:
+        An array of type T (items).
+        A target element of type T (target).
+3.Iterate through each element in the array items:
+        Compare the current element with the target using the equals method.
+        If a match is found, return the index of the element.
+4.If no match is found after iterating through the entire array, return -1.
+5.End the program.
+____________________________________________________________________________________________________
+BinarySearch
+1.Start the program.
+2.Define a generic method binarySearchMethod that takes:
+        A sorted array of type T (items), where T must implement the Comparable interface.
+        A target element of type T (target).
+3.Initialize two pointers:
+        left pointing to the start of the array (index 0).
+        right pointing to the end of the array (index items.length - 1).
+4.Perform a loop while left is less than or equal to right:
+        Calculate the middle index mid as (left + right) / 2.
+        Compare the element at items[mid] with the target using the compareTo method:
+            If items[mid] equals target, return mid (the index where the target is found).
+            If items[mid] is less than target, update left to mid + 1 (search the right half).
+            If items[mid] is greater than target, update right to mid - 1 (search the left half).
+5.If the loop ends without finding the target, return -1 (target not found).
