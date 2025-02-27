@@ -95,12 +95,12 @@ Each module contains:
 - 📝 Notes and key concepts
 - ✅ Weekly goals and accomplishments
 
-| Week | Focus Area               | Tasks Completed                                                                 |
-|------|--------------------------|---------------------------------------------------------------------------------|
-| 1    |                          |                                                                                 |
-| 2    |                          |                                                                                 |
-| 3    |                          |                                                                                 |
-| 4    |                          |                                                                                 |
+| Week | Focus Area        | Tasks Completed                                             | Weekly Projects  |
+|------|-------------------|-------------------------------------------------------------|------------------|
+| 1    | Java fundamentals | Syntax, Variables, Data types, Operators, Control flow, OOP | Bank Account CLI |
+| 2    |                   |                                                             |                  |
+| 3    |                   |                                                             |                  |
+| 4    |                   |                                                             |                  |
 
 ## 📖 How to Explore
 - Each phase folder contains code, notes, and mini-projects.
