@@ -1,3 +1,5 @@
+package search_sort;
+
 // Define a class named LinearSearch
 public class LinearSearch {
 

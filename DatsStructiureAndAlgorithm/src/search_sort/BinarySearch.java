@@ -1,3 +1,5 @@
+package search_sort;
+
 public class BinarySearch {
     public static <T extends Comparable<T>> int binarySearchMethod(T[] items, T target) {
         int left = 0;

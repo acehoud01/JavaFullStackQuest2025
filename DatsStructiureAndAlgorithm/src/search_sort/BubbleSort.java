@@ -1,3 +1,5 @@
+package search_sort;
+
 public class BubbleSort {
     public static <T extends Comparable<T>> void bubbleSorting(T[] arr) {
         int n = arr.length;

@@ -1,3 +1,5 @@
+package search_sort;
+
 public class InsertionSort {
     public static <T extends Comparable<T>> void insertionSort(T[] arr) {
         // Check for null or empty array

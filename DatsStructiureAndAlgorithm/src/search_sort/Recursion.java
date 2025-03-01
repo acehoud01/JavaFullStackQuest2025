@@ -1,3 +1,5 @@
+package search_sort;
+
 public class Recursion {
     public static void main(String[] args) {
         f1(10);

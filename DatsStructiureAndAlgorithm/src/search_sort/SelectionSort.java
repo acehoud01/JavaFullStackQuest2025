@@ -1,3 +1,5 @@
+package search_sort;
+
 public class SelectionSort {
     public static void main(String[] args) {
         Integer[] numbers = {

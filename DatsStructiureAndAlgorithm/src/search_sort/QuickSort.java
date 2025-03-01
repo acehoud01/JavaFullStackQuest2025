@@ -1,3 +1,5 @@
+package search_sort;
+
 public class QuickSort {
     public static void main(String[] args) {
         String[] arr = {"Iphone", "Nokia", "Samsung", "Xiaomi", "Huawei", "Alcatel", "Motorola", "IPhone"};
