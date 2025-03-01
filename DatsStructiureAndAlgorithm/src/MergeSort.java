@@ -4,9 +4,9 @@ public class MergeSort {
     public static void main(String[] args) {
         // Example with Integer array
         Integer[] intArr = {5, 2, 9, 1};
-        Integer[] sortedInts = mergeSort(intArr, Integer.class); // Sort the array
+        Integer[] sortedInt = mergeSort(intArr, Integer.class); // Sort the array
         System.out.print("Integers: ");
-        printArray(sortedInts); // Output: Integers: 1 2 5 9
+        printArray(sortedInt); // Output: Integers: 1 2 5 9
 
         // Example with String array
         String[] stringArr = {"banana", "apple", "cherry", "date"};
