@@ -9,7 +9,7 @@ This repository serves as a roadmap for my journey to becoming a full-stack deve
 - **Progress Tracking**: Weekly updates on my progress.
 
 ## 📅 **Timeline**
-- **Start Date**: March 1, 2025
+- **Start Date**: March 3, 2025
 - **End Date**: August 31, 2025
 - **Weekly Commitment**: 10 - 15 hours/week (15 hours on weekdays, 7 hours on weekends)
 
