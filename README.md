@@ -41,6 +41,8 @@ This repository serves as a roadmap for my journey to becoming a full-stack deve
 ## 📂 **Repository Structure**
 Java_fullStackQuest2025/
 
+├── DataStructureAndAlgorithms
+
 ├── Phase-1-Foundation/ 
 
 ├── Phase-2-BackEnd/
@@ -69,12 +71,7 @@ By the end of this journey, I aim to:
 
 ## 📚 **Learning Resources**
 Here are some of the resources I’ll be using:
-- **Java**: [Java Programming for Beginners (Udemy)](https://www.udemy.com/course/java-programming-tutorial-for-beginners/)
-- **Spring Boot**: [Spring Boot for Beginners (Udemy)](https://www.udemy.com/course/spring-boot-tutorial-for-beginners/)
-- **React**: [React for Beginners (Udemy)](https://www.udemy.com/course/react-the-complete-guide-incl-hooks/)
-- **Docker**: [Docker for Beginners (Udemy)](https://www.udemy.com/course/docker-mastery/)
-- **AWS**: [AWS Fundamentals (Udemy)](https://www.udemy.com/course/aws-certified-cloud-practitioner-new/)
-- **Head_First_Java**
+- **Java**: 
 
 ---
 
