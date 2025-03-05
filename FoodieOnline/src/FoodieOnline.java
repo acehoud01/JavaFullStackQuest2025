@@ -1,38 +1,37 @@
-/**
-Note: This is a build-up project for learning Java Full-Stack development.
-It represents progress as of Day 2 (March 4th, 2025) of Week 1: Java Fundamentals.
-Features will expand daily as new concepts (e.g., Switch, OOP, APIs) are learned.
+import java.util.Scanner;
 
-Current state: Basic store selection and ordering using syntax, variables, data types,
-operators, and control flow (if-else, while).
+/**
+ * Note: This is a build-up project for learning Java Full-Stack development.
+ * It represents progress as of Day 3 (March 5th, 2025) of Week 1: Java Fundamentals.
+ * Features will expand daily as new concepts (e.g., Encapsulation, APIs) are learned.
+ * <p>
+ * Current state: Store selection with switch and basic OOP (classes, objects) added to
+ * previous features: syntax, variables, data types, operators, and control flow (if-else, while).
+ * Users can choose a store from a list and order from its menu.
  */
 
 public class FoodieOnline{
-    // FoodItem class (blueprint for menu items)
     static class FoodItem {
         String name;
         double price;
-        boolean available;
+        boolean isAvailable;
 
-        FoodItem(String name, double price, boolean available) {
+        FoodItem(String name, double price, boolean isAvailable) {
             this.name = name;
             this.price = price;
-            this.available = available;
+            this.isAvailable = isAvailable;
         }
 
         void display() {
-            System.out.println(name + " - R" + price + (available ? " (Available)" : " (Out of Stock)"));
+            System.out.println(name + " - R" + price + (isAvailable ? " (Available)" : " (Out of Stock)"));
         }
 
-        boolean canOrder() {
-            return available;
-        }
+        boolean canOrder() { return isAvailable; }
     }
 
-    // Store class (blueprint for stores)
     static class Store {
         String name;
-        FoodItem[] menu; // Each store has its own menu
+        FoodItem[] menu;
 
         Store(String name, FoodItem[] menu) {
             this.name = name;
@@ -40,9 +39,9 @@ public class FoodieOnline{
         }
 
         void displayMenu() {
-            System.out.println("=== " + name + " Menu ===");
+            System.out.println("______ " + name + " Menu ______");
             int i = 0;
-            while (i < menu.length) { // Loop through menu
+            while (i < menu.length) {
                 menu[i].display();
                 i++;
             }
@@ -50,66 +49,69 @@ public class FoodieOnline{
     }
 
     public static void main(String[] args) {
-        System.out.println("Welcome to FoodieOnline");
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Welcome to Foodie online!");
+        System.out.println("Choose a store:\n1. KFC\n2. Nandos\n3. Chicken Licken");
 
-        // Create food items for Store 1
-        FoodItem pizza = new FoodItem("Pap and Steak", 49.99, true);
-        FoodItem burger = new FoodItem("Chicken and Rice", 38.99, false);
-        FoodItem[] store1Menu = {pizza, burger};
+        // create stores
+        FoodItem[] kfcMenu = {
+                new FoodItem("Streetwise Three with pap", 49.90, true),
+                new FoodItem("Streetwise Bucket For 1", 49.90, false),
+                new FoodItem("Streetwise Three with Chips", 55.99, true)
+        };
 
-        // Create food items for Store 2
-        FoodItem sushi = new FoodItem("Kota King", 15.49, true);
-        FoodItem ramen = new FoodItem("Biltong", 10.99, true);
-        FoodItem[] store2Menu = {sushi, ramen};
+        FoodItem[] nandosMenu = {
+               new FoodItem("Full Chicken + any 3 sharing sides", 374.00, true),
+               new FoodItem("Roasted Veg", 43.00, false),
+               new FoodItem("Chicken wrap", 99.00, true)
+        };
+
+        FoodItem[] chickenLickenMenu = {
+                new FoodItem("Hotwings 12", 109.00, true),
+                new FoodItem("Soul Mates Classic Party", 195, true),
+                new FoodItem("Hotwings Meal 8 Max", 120, true)
+        };
 
         // Create stores
-        Store store1 = new Store("Africa Taste", store1Menu);
-        Store store2 = new Store("SA Fav", store2Menu);
+        Store kfc = new Store("KFC", kfcMenu);
+        Store nandos = new Store("Nandos", nandosMenu);
+        Store chickenLicken = new Store("Chicken Licken", chickenLickenMenu);
 
-        // Hardcoded store choice (for Day 2)
-        String chosenStore = "Africa Taste"; // User picks this
+        // Store options
+        Store[] stores = {kfc, nandos, chickenLicken};
 
-        // Find and display chosen store's menu
-        Store[] stores = {store1, store2};
-        int i = 0;
+        // User picks a store with switch
+        int storeChoice = sc.nextInt();
         Store selectedStore = null;
-        while (i < stores.length) {
-            if (chosenStore.equals(stores[i].name)) { // String comparison (== for now)
-                selectedStore = stores[i];
-                break;
-            }
-            i++;
+
+        switch (storeChoice) {
+            case 1 -> selectedStore = stores[0];
+            case 2 -> selectedStore = stores[1];
+            case 3 -> selectedStore = stores[2];
+            default -> System.out.println("Invalid store");
         }
 
+        // Order logic
         if (selectedStore != null) {
+            System.out.println("You chose: " + selectedStore.name);
             selectedStore.displayMenu();
 
-            // Order logic (hardcoded item for now)
-            String choice = "Pap and Steak";
+            String foodChoice = "Hotwings 12"; // Hardcoded for Day 3
             double total = 0.0;
-            i = 0;
+            int i = 0;
+            
             while (i < selectedStore.menu.length) {
-                if (choice.equals(selectedStore.menu[i].name) && selectedStore.menu[i].canOrder()) {
+                if (foodChoice.equals(selectedStore.menu[i].name) && selectedStore.menu[i].canOrder()) {
                     total += selectedStore.menu[i].price;
-                    System.out.println("Ordered " + selectedStore.menu[i].name + " for R" + selectedStore.menu[i].price);
+                    System.out.println("Ordered " + foodChoice + " for R" + selectedStore.menu[i].price);
                     break;
                 }
                 i++;
             }
             if (total == 0.0) {
-                System.out.println("Sorry, " + choice + " is unavailable or invalid!");
+                System.out.println("Sorry, " + foodChoice + " is unavailable or invalid!");
             }
-
-            // Confirmation countdown
-            int count = 3;
-            System.out.print("Confirming order in: ");
-            while (count > 0) {
-                System.out.print(count + " ");
-                count--;
-            }
-            System.out.println("\nTotal: R" + total);
-        } else {
-            System.out.println("Store '" + chosenStore + "' not found!");
+            System.out.println("Total: R" + total);
         }
     }
 }
