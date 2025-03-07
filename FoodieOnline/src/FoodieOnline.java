@@ -1,14 +1,16 @@
 import java.util.Scanner;
 
+
 /**
  * Note: This is a build-up project for learning Java Full-Stack development.
- * It represents progress as of Day 3 (March 5th, 2025) of Week 1: Java Fundamentals.
- * Features will expand daily as new concepts (e.g., Encapsulation, APIs) are learned.
+ * It represents progress as of Day 4 (March 6th, 2025) of Week 1: Java Fundamentals.
+ * Features will expand daily as new concepts (e.g., Collections, APIs) are learned.
  * <p>
- * Current state: Store selection with switch and basic OOP (classes, objects) added to
- * previous features: syntax, variables, data types, operators, and control flow (if-else, while).
- * Users can choose a store from a list and order from its menu.
+ * Current state: Encapsulation (private fields, getters/setters) and Scanner for user input
+ * added to store selection (switch), OOP (classes, objects), syntax, variables, data types,
+ * operators, and control flow (if-else, while).
  */
+
 
 public class FoodieOnline{
     static class FoodItem {
@@ -49,7 +51,7 @@ public class FoodieOnline{
     }
 
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);
         System.out.println("Welcome to Foodie online!");
         System.out.println("Choose a store:\n1. KFC\n2. Nandos\n3. Chicken Licken");
 
@@ -81,7 +83,7 @@ public class FoodieOnline{
         Store[] stores = {kfc, nandos, chickenLicken};
 
         // User picks a store with switch
-        int storeChoice = sc.nextInt();
+        int storeChoice = scanner.nextInt();
         Store selectedStore = null;
 
         switch (storeChoice) {
@@ -96,7 +98,11 @@ public class FoodieOnline{
             System.out.println("You chose: " + selectedStore.name);
             selectedStore.displayMenu();
 
-            String foodChoice = "Hotwings 12"; // Hardcoded for Day 3
+            System.out.print("Enter food item to order: ");
+            scanner.nextLine(); // Clear buffer
+            String foodChoice = scanner.nextLine();
+
+
             double total = 0.0;
             int i = 0;
             
@@ -113,5 +119,6 @@ public class FoodieOnline{
             }
             System.out.println("Total: R" + total);
         }
+        scanner.close();
     }
 }
