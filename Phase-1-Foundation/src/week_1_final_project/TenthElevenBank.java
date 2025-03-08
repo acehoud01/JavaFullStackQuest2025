@@ -12,9 +12,7 @@ import java.util.Scanner;
  * switch, OOP (classes, objects), syntax, variables, data types, operators, and control flow
  * (if-else, while). Handles edge cases like negative deposits and PIN retries.
  */
-public class TenthElevenBank {
-
-    // Inner class representing a Current Account
+public class TenthElevenBank {   // Inner class representing a Current Account
     static class CurrentAccount {
         // Private fields for account details
         private String name;

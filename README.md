@@ -92,12 +92,14 @@ Each module contains:
 - 📝 Notes and key concepts
 - ✅ Weekly goals and accomplishments
 
-| Week | Focus Area        | Tasks Completed                                             | Weekly Projects  |
-|------|-------------------|-------------------------------------------------------------|------------------|
-| 1    | Java fundamentals | Syntax, Variables, Data types, Operators, Control flow, OOP | Bank Account CLI |
-| 2    |                   |                                                             |                  |
-| 3    |                   |                                                             |                  |
-| 4    |                   |                                                             |                  |
+| Week | Focus Area            | Tasks Completed                                                                     | Weekly Projects                                                              |
+|------|-----------------------|-------------------------------------------------------------------------------------|------------------------------------------------------------------------------|
+| 1    | Java Fundamentals     | - Learned Java syntax, variables, data types (int, double, String, boolean)         | - **Number Checker**: Check if a number is even/odd, positive/negative       |
+|      |                       | - Mastered operators (arithmetic, comparison, logical)                              | - **UberEats Clone**: Basic store selection and ordering system              |
+|      |                       | - Used control flow: if-else, while loops, switch statements                        | - **Day of Week**: Print day using switch                                    |
+|      |                       | - Introduced OOP: classes, objects, encapsulation (private fields, getters/setters) | - **Student Record**: Encapsulated student data                              |                  
+|      |                       | - Implemented Scanner for user input, handled buffer issues                         | - **Fast Food Order Simulator**: Menu ordering with stock management         |
+|      |                       | - Applied program design: prep, test, code approach                                 | - **TenthElevenBank CLI**: Bank account app with login, deposit, withdraw    |
 
 ## 📖 How to Explore
 - Each phase folder contains code, notes, and mini-projects.
