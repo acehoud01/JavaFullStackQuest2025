@@ -72,7 +72,8 @@ public class TenthElevenBank {   // Inner class representing a Current Account
         }
 
         // Placeholder methods for future features
-        public void openAccount() {}
+        public void openAccount() {
+        }
         public void closeAccount() {}
         public void addSavingsAccount() {}
         public void applyForCredit() {}
@@ -115,62 +116,71 @@ public class TenthElevenBank {   // Inner class representing a Current Account
         Scanner input = new Scanner(System.in);
         // Create a test account with sample data
         CurrentAccount test = new CurrentAccount("Anele", "Billy", "Mr", 1234567890L, 500.00, 12345);
-        System.out.println("Welcome to TenthElevenBank");
+        System.out.println("TenthElevenBank");
+        System.out.println("1. Manage your Account\n2. Open an Account\n3. Deposit money to someone");
+        System.out.print("\nEnter your option: ");
+        int testOptions = input.nextInt();
+
+        switch (testOptions) {
+            case 1 -> System.out.println("just a test");
+            case 2 -> test.openAccount();
+            case 3 -> System.out.println("another test");
+        }
 
         boolean isLoggedIn = false; // Track login status
         int pinTries = 0; // Track number of login attempts
 
-        // Login Loop
-        while (pinTries < 3 && !isLoggedIn) {
-            System.out.print("Please enter your Account Number: ");
-            long userAcc = input.nextLong();
-            System.out.print("Please enter your PIN: ");
-            int userPin = input.nextInt();
-
-            // Validate account number and PIN
-            if (userAcc == test.getAccountNumber() && userPin == test.getPin()) {
-                isLoggedIn = true; // Successful login
-                System.out.println("Welcome " + test.getTitle() + " " + test.getSurname());
-            } else {
-                pinTries++; // Increment failed attempts
-                System.out.println("Incorrect account number or PIN. " + (3 - pinTries) + " tries left.");
-            }
-        }
-
-        // Block account if login fails after 3 attempts
-        if (!isLoggedIn) {
-            System.out.println("Account blocked after 3 failed attempts.");
-            input.close(); // Close Scanner
-            return; // Exit program
-        }
-
-        // Menu Loop
-        while (true) {
-            System.out.println("\nChoose one of the following options:");
-            System.out.println("1. View Account Details\n2. Deposit\n3. Withdraw\n4. Exit");
-            System.out.print("Enter option: ");
-            int option = input.nextInt();
-
-            // Handle user menu selection
-            switch (option) {
-                case 1:
-                    test.viewAccount(); // Display account details
-                    break;
-                case 2:
-                    test.deposit(input); // Deposit money
-                    break;
-                case 3:
-                    test.withdraw(input); // Withdraw money
-                    break;
-                case 4:
-                    // Exit program with final balance
-                    System.out.println("Thank you for using TenthEleven. Final balance: R" +
-                            String.format("%.2f", test.getBalance()));
-                    input.close(); // Close Scanner
-                    return; // Exit program
-                default:
-                    System.out.println("Invalid option. Please try again.");
-            }
-        }
+//        // Login Loop
+//        while (pinTries < 3 && !isLoggedIn) {
+//            System.out.print("Please enter your Account Number: ");
+//            long userAcc = input.nextLong();
+//            System.out.print("Please enter your PIN: ");
+//            int userPin = input.nextInt();
+//
+//            // Validate account number and PIN
+//            if (userAcc == test.getAccountNumber() && userPin == test.getPin()) {
+//                isLoggedIn = true; // Successful login
+//                System.out.println("Welcome " + test.getTitle() + " " + test.getSurname());
+//            } else {
+//                pinTries++; // Increment failed attempts
+//                System.out.println("Incorrect account number or PIN. " + (3 - pinTries) + " tries left.");
+//            }
+//        }
+//
+//        // Block account if login fails after 3 attempts
+//        if (!isLoggedIn) {
+//            System.out.println("Account blocked after 3 failed attempts.");
+//            input.close(); // Close Scanner
+//            return; // Exit program
+//        }
+//
+//        // Menu Loop
+//        while (true) {
+//            System.out.println("\nChoose one of the following options:");
+//            System.out.println("1. View Account Details\n2. Deposit\n3. Withdraw\n4. Exit");
+//            System.out.print("Enter option: ");
+//            int option = input.nextInt();
+//
+//            // Handle user menu selection
+//            switch (option) {
+//                case 1:
+//                    test.viewAccount(); // Display account details
+//                    break;
+//                case 2:
+//                    test.deposit(input); // Deposit money
+//                    break;
+//                case 3:
+//                    test.withdraw(input); // Withdraw money
+//                    break;
+//                case 4:
+//                    // Exit program with final balance
+//                    System.out.println("Thank you for using TenthEleven. Final balance: R" +
+//                            String.format("%.2f", test.getBalance()));
+//                    input.close(); // Close Scanner
+//                    return; // Exit program
+//                default:
+//                    System.out.println("Invalid option. Please try again.");
+//            }
+//        }
     }
 }

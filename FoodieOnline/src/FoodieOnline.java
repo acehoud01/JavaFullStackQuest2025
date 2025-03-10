@@ -1,22 +1,20 @@
 import java.util.Scanner;
 
-
 /**
  * Note: This is a build-up project for learning Java Full-Stack development.
- * It represents progress as of Day 4 (March 6th, 2025) of Week 1: Java Fundamentals.
- * Features will expand daily as new concepts (e.g., Collections, APIs) are learned.
+ * It represents progress as of Day 6 (March 10th, 2025) of Week 2: Java Fundamentals.
+ * Features will expand daily as new concepts (e.g., Methods, APIs) are learned.
  * <p>
- * Current state: Encapsulation (private fields, getters/setters) and Scanner for user input
- * added to store selection (switch), OOP (classes, objects), syntax, variables, data types,
- * operators, and control flow (if-else, while).
+ * Current state: Arrays for multiple stores added to encapsulation, Scanner input,
+ * switch selection, OOP (classes, objects), syntax, variables, data types, operators,
+ * and control flow (if-else, while).
  */
-
 
 public class FoodieOnline{
     static class FoodItem {
-        String name;
-        double price;
-        boolean isAvailable;
+        private String name;
+        private double price;
+        private boolean isAvailable;
 
         FoodItem(String name, double price, boolean isAvailable) {
             this.name = name;
@@ -24,28 +22,35 @@ public class FoodieOnline{
             this.isAvailable = isAvailable;
         }
 
+
+        public String getName() { return name; }
+        public double getPrice() { return price; }
+
+
         void display() {
             System.out.println(name + " - R" + price + (isAvailable ? " (Available)" : " (Out of Stock)"));
         }
 
-        boolean canOrder() { return isAvailable; }
+        public boolean canOrder() { return isAvailable; }
     }
 
     static class Store {
-        String name;
-        FoodItem[] menu;
+        private String name;
+        private FoodItem[] menu;
 
         Store(String name, FoodItem[] menu) {
             this.name = name;
             this.menu = menu;
         }
 
+        public String getName() { return name; }
+        public FoodItem[] getMenu() { return menu; }
+
         void displayMenu() {
             System.out.println("______ " + name + " Menu ______");
-            int i = 0;
-            while (i < menu.length) {
-                menu[i].display();
-                i++;
+
+            for (FoodItem item : menu) {
+                item.display();
             }
         }
     }
@@ -53,9 +58,8 @@ public class FoodieOnline{
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Welcome to Foodie online!");
-        System.out.println("Choose a store:\n1. KFC\n2. Nandos\n3. Chicken Licken");
 
-        // create stores
+        // Define Menu
         FoodItem[] kfcMenu = {
                 new FoodItem("Streetwise Three with pap", 49.90, true),
                 new FoodItem("Streetwise Bucket For 1", 49.90, false),
@@ -75,50 +79,53 @@ public class FoodieOnline{
         };
 
         // Create stores
-        Store kfc = new Store("KFC", kfcMenu);
-        Store nandos = new Store("Nandos", nandosMenu);
-        Store chickenLicken = new Store("Chicken Licken", chickenLickenMenu);
+        Store[] stores = {
+                new Store("KFC", kfcMenu),
+                new Store("Nandos", nandosMenu),
+                new Store("Chicken Licken", chickenLickenMenu)
+        };
 
-        // Store options
-        Store[] stores = {kfc, nandos, chickenLicken};
+        // Show store options
+        System.out.println("Available stores:");
+        for (int i = 0; i < stores.length; i++) {
+            System.out.println((i + 1) + ". " + stores[i].getName());
+        }
 
-        // User picks a store with switch
-        int storeChoice = scanner.nextInt();
+        // User picks a store
+        System.out.print("Enter store number (1-" + stores.length + "): ");
+        int storeChoice = scanner.nextInt() - 1; // Adjust for 0-based index
         Store selectedStore = null;
 
-        switch (storeChoice) {
-            case 1 -> selectedStore = stores[0];
-            case 2 -> selectedStore = stores[1];
-            case 3 -> selectedStore = stores[2];
-            default -> System.out.println("Invalid store");
+        if (storeChoice >= 0 && storeChoice < stores.length) {
+            selectedStore = stores[storeChoice];
+        } else {
+            System.out.println("Invalid store choice!");
+            scanner.close();
+            return;
         }
 
         // Order logic
-        if (selectedStore != null) {
-            System.out.println("You chose: " + selectedStore.name);
-            selectedStore.displayMenu();
+        System.out.println("You chose: " + selectedStore.getName());
+        selectedStore.displayMenu();
 
-            System.out.print("Enter food item to order: ");
-            scanner.nextLine(); // Clear buffer
-            String foodChoice = scanner.nextLine();
+        System.out.print("Enter food item to order: ");
+        scanner.nextLine(); // Clear buffer
+        String foodChoice = scanner.nextLine();
 
-
-            double total = 0.0;
-            int i = 0;
-            
-            while (i < selectedStore.menu.length) {
-                if (foodChoice.equals(selectedStore.menu[i].name) && selectedStore.menu[i].canOrder()) {
-                    total += selectedStore.menu[i].price;
-                    System.out.println("Ordered " + foodChoice + " for R" + selectedStore.menu[i].price);
-                    break;
-                }
-                i++;
+        double total = 0.0;
+        for (int i = 0; i < selectedStore.getMenu().length; i++) {
+            if (foodChoice.equals(selectedStore.getMenu()[i].getName()) &&
+                    selectedStore.getMenu()[i].canOrder()) {
+                total += selectedStore.getMenu()[i].getPrice();
+                System.out.println("Ordered " + foodChoice + " for R" +
+                        selectedStore.getMenu()[i].getPrice());
+                break;
             }
-            if (total == 0.0) {
-                System.out.println("Sorry, " + foodChoice + " is unavailable or invalid!");
-            }
-            System.out.println("Total: R" + total);
         }
+        if (total == 0.0) {
+            System.out.println("Sorry, " + foodChoice + " is unavailable or invalid!");
+        }
+        System.out.println("Total: R" + total);
         scanner.close();
     }
 }
