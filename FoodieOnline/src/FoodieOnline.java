@@ -2,15 +2,14 @@ import java.util.Scanner;
 
 /**
  * Note: This is a build-up project for learning Java Full-Stack development.
- * It represents progress as of Day 6 (March 10th, 2025) of Week 2: Java Fundamentals.
- * Features will expand daily as new concepts (e.g., Methods, APIs) are learned.
- * <p>
- * Current state: Arrays for multiple stores added to encapsulation, Scanner input,
- * switch selection, OOP (classes, objects), syntax, variables, data types, operators,
- * and control flow (if-else, while).
+ * It represents progress as of Day 7 (March 11th, 2025) of Week 2: Java Fundamentals.
+ * Features will expand daily as new concepts (e.g., String Manipulation, APIs) are learned.
+ *
+ * Current state: Methods (isItemAvailable, calculateOrderTotal) added to arrays,
+ * encapsulation, Scanner input, switch selection, OOP (classes, objects), syntax,
+ * variables, data types, operators, and control flow (if-else, while).
  */
-
-public class FoodieOnline{
+public class FoodieOnline {
     static class FoodItem {
         private String name;
         private double price;
@@ -22,10 +21,8 @@ public class FoodieOnline{
             this.isAvailable = isAvailable;
         }
 
-
         public String getName() { return name; }
         public double getPrice() { return price; }
-
 
         void display() {
             System.out.println(name + " - R" + price + (isAvailable ? " (Available)" : " (Out of Stock)"));
@@ -48,16 +45,39 @@ public class FoodieOnline{
 
         void displayMenu() {
             System.out.println("______ " + name + " Menu ______");
-
             for (FoodItem item : menu) {
                 item.display();
             }
+        }
+
+        // Method to calculate total for multiple items
+        public double calculateOrderTotal(String[] orderItems) {
+            double total = 0.0;
+            for (String itemName : orderItems) {
+                for (int i = 0; i < menu.length; i++) {
+                    if (itemName.equals(menu[i].getName()) && menu[i].canOrder()) {
+                        total += menu[i].getPrice();
+                        break;
+                    }
+                }
+            }
+            return total;
+        }
+
+        // Method to check item availability
+        public boolean isItemAvailable(String itemName) {
+            for (int i = 0; i < menu.length; i++) {
+                if (itemName.equals(menu[i].getName())) {
+                    return menu[i].canOrder();
+                }
+            }
+            return false;
         }
     }
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Welcome to Foodie online!");
+        System.out.println("Welcome to FoodieOnline!");
 
         // Define Menu
         FoodItem[] kfcMenu = {
@@ -67,9 +87,9 @@ public class FoodieOnline{
         };
 
         FoodItem[] nandosMenu = {
-               new FoodItem("Full Chicken + any 3 sharing sides", 374.00, true),
-               new FoodItem("Roasted Veg", 43.00, false),
-               new FoodItem("Chicken wrap", 99.00, true)
+                new FoodItem("Full Chicken + any 3 sharing sides", 374.00, true),
+                new FoodItem("Roasted Veg", 43.00, false),
+                new FoodItem("Chicken wrap", 99.00, true)
         };
 
         FoodItem[] chickenLickenMenu = {
@@ -93,7 +113,7 @@ public class FoodieOnline{
 
         // User picks a store
         System.out.print("Enter store number (1-" + stores.length + "): ");
-        int storeChoice = scanner.nextInt() - 1; // Adjust for 0-based index
+        int storeChoice = scanner.nextInt() - 1;
         Store selectedStore = null;
 
         if (storeChoice >= 0 && storeChoice < stores.length) {
@@ -104,28 +124,37 @@ public class FoodieOnline{
             return;
         }
 
-        // Order logic
+        // Order logic with methods
         System.out.println("You chose: " + selectedStore.getName());
         selectedStore.displayMenu();
 
-        System.out.print("Enter food item to order: ");
+        System.out.print("How many items to order? ");
+        int numItems = scanner.nextInt();
         scanner.nextLine(); // Clear buffer
-        String foodChoice = scanner.nextLine();
+        String[] orderItems = new String[numItems];
 
+        for (int i = 0; i < numItems; i++) {
+            System.out.print("Enter item " + (i + 1) + " to order: ");
+            orderItems[i] = scanner.nextLine();
+        }
+
+        // Use both methods
         double total = 0.0;
-        for (int i = 0; i < selectedStore.getMenu().length; i++) {
-            if (foodChoice.equals(selectedStore.getMenu()[i].getName()) &&
-                    selectedStore.getMenu()[i].canOrder()) {
-                total += selectedStore.getMenu()[i].getPrice();
-                System.out.println("Ordered " + foodChoice + " for R" +
-                        selectedStore.getMenu()[i].getPrice());
-                break;
+        for (String item : orderItems) {
+            if (selectedStore.isItemAvailable(item)) {
+                total = selectedStore.calculateOrderTotal(orderItems);
+                System.out.println("Order placed for: " + String.join(", ", orderItems));
+                break; // Exit after valid order
+            } else {
+                System.out.println("Sorry, " + item + " is unavailable or invalid!");
             }
         }
-        if (total == 0.0) {
-            System.out.println("Sorry, " + foodChoice + " is unavailable or invalid!");
+
+        if (total > 0) {
+            System.out.printf("Total: R%.2f\n", total);
+        } else {
+            System.out.println("No valid items ordered!");
         }
-        System.out.println("Total: R" + total);
         scanner.close();
     }
 }
