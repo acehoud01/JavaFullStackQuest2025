@@ -2,12 +2,12 @@ import java.util.Scanner;
 
 /**
  * Note: This is a build-up project for learning Java Full-Stack development.
- * It represents progress as of Day 7 (March 11th, 2025) of Week 2: Java Fundamentals.
- * Features will expand daily as new concepts (e.g., String Manipulation, APIs) are learned.
+ * It represents progress as of Day 8 (March 12th, 2025) of Week 2: Java Fundamentals.
+ * Features will expand daily as new concepts (e.g., Debugging, APIs) are learned.
  *
- * Current state: Methods (isItemAvailable, calculateOrderTotal) added to arrays,
- * encapsulation, Scanner input, switch selection, OOP (classes, objects), syntax,
- * variables, data types, operators, and control flow (if-else, while).
+ * Current state: String manipulation (case-insensitive matching) added to methods,
+ * arrays, encapsulation, Scanner input, switch selection, OOP, syntax, variables,
+ * data types, operators, and control flow.
  */
 public class FoodieOnline {
     static class FoodItem {
