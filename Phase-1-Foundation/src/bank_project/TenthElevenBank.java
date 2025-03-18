@@ -84,10 +84,10 @@ public class TenthElevenBank {    // Inner class representing a Current Account
         }
 
         // Placeholder methods for future features
-        public void openAccount() {}
-        public void closeAccount() {}
-        public void addSavingsAccount() {}
-        public void applyForCredit() {}
+//        public void openAccount() {}
+//        public void closeAccount() {}
+//        public void addSavingsAccount() {}
+//        public void applyForCredit() {}
 
 
 
@@ -232,12 +232,10 @@ public class TenthElevenBank {    // Inner class representing a Current Account
                     pauseExecution(input);
                     break;
                 case 5:
-                    clearScreen();
                     // Exit program with final balance
                     System.out.println("Thank you for using TenthEleven.\nAvailable balance: R" +
                             String.format("%.2f", test.getBalance()));
                     input.close(); // Close Scanner
-                    pauseExecution(input);
                     return; // Exit program
                 default:
                     clearScreen();
