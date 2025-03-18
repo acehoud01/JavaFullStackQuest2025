@@ -1,15 +1,14 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
- * Note: This is a build-up project for learning Java Full-Stack development.
- * It represents progress as of Day 8 (March 12th, 2025) of Week 2: Java Fundamentals.
- * Features will expand daily as new concepts (e.g., Debugging, APIs) are learned.
- *
- * Current state: String manipulation (case-insensitive matching) added to methods,
- * arrays, encapsulation, Scanner input, switch selection, OOP, syntax, variables,
- * data types, operators, and control flow.
+ * Note: Progress as of Day 12 (March 18th, 2025) of Week 3: Collections.
+ * Current state: Multiple stores with ArrayList, operations (remove unavailable items)
+ * added to ArrayList menus, methods, arrays, encapsulation, Scanner input, switch
+ * selection, OOP, syntax, variables, data types, operators, string manipulation,
+ * and control flow.
  */
-public class FoodieOnline {
+public class FoodieOnline{
     static class FoodItem {
         private String name;
         private double price;
@@ -23,25 +22,36 @@ public class FoodieOnline {
 
         public String getName() { return name; }
         public double getPrice() { return price; }
+        public boolean canOrder() { return isAvailable; }
 
         void display() {
             System.out.println(name + " - R" + price + (isAvailable ? " (Available)" : " (Out of Stock)"));
         }
-
-        public boolean canOrder() { return isAvailable; }
     }
 
     static class Store {
         private String name;
-        private FoodItem[] menu;
+        private ArrayList<FoodItem> menu;
 
-        Store(String name, FoodItem[] menu) {
+        Store(String name) {
             this.name = name;
-            this.menu = menu;
+            this.menu = new ArrayList<>();
         }
 
         public String getName() { return name; }
-        public FoodItem[] getMenu() { return menu; }
+        public ArrayList<FoodItem> getMenu() { return menu; }
+
+        void addItem(FoodItem item) {
+            menu.add(item);
+        }
+
+        void removeUnavailableItems() {
+            for (int i = menu.size() - 1; i >= 0; i--) {
+                if (!menu.get(i).canOrder()) {
+                    menu.remove(i);
+                }
+            }
+        }
 
         void displayMenu() {
             System.out.println("______ " + name + " Menu ______");
@@ -50,13 +60,12 @@ public class FoodieOnline {
             }
         }
 
-        // Method to calculate total for multiple items
         public double calculateOrderTotal(String[] orderItems) {
             double total = 0.0;
             for (String itemName : orderItems) {
-                for (int i = 0; i < menu.length; i++) {
-                    if (itemName.equals(menu[i].getName()) && menu[i].canOrder()) {
-                        total += menu[i].getPrice();
+                for (FoodItem item : menu) {
+                    if (itemName.equalsIgnoreCase(item.getName()) && item.canOrder()) {
+                        total += item.getPrice();
                         break;
                     }
                 }
@@ -64,11 +73,10 @@ public class FoodieOnline {
             return total;
         }
 
-        // Method to check item availability
         public boolean isItemAvailable(String itemName) {
-            for (int i = 0; i < menu.length; i++) {
-                if (itemName.equals(menu[i].getName())) {
-                    return menu[i].canOrder();
+            for (FoodItem item : menu) {
+                if (itemName.equalsIgnoreCase(item.getName())) {
+                    return item.canOrder();
                 }
             }
             return false;
@@ -79,58 +87,57 @@ public class FoodieOnline {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Welcome to FoodieOnline!");
 
-        // Define Menu
-        FoodItem[] kfcMenu = {
-                new FoodItem("Streetwise Three with pap", 49.90, true),
-                new FoodItem("Streetwise Bucket For 1", 49.90, false),
-                new FoodItem("Streetwise Three with Chips", 55.99, true)
-        };
+        // Multiple stores with ArrayList
+        ArrayList<Store> stores = new ArrayList<>();
+        Store kfc = new Store("KFC");
+        kfc.addItem(new FoodItem("Streetwise Three with pap", 49.90, true));
+        kfc.addItem(new FoodItem("Streetwise Bucket For 1", 49.90, false));
+        kfc.addItem(new FoodItem("Streetwise Three with Chips", 55.99, true));
 
-        FoodItem[] nandosMenu = {
-                new FoodItem("Full Chicken + any 3 sharing sides", 374.00, true),
-                new FoodItem("Roasted Veg", 43.00, false),
-                new FoodItem("Chicken wrap", 99.00, true)
-        };
+        Store nandos = new Store("Nandos");
+        nandos.addItem(new FoodItem("Full Chicken + any 3 sharing sides", 374.00, true));
+        nandos.addItem(new FoodItem("Roasted Veg", 43.00, false));
+        nandos.addItem(new FoodItem("Chicken wrap", 99.00, true));
 
-        FoodItem[] chickenLickenMenu = {
-                new FoodItem("Hotwings 12", 109.00, true),
-                new FoodItem("Soul Mates Classic Party", 195, true),
-                new FoodItem("Hotwings Meal 8 Max", 120, true)
-        };
+        Store chickenLicken = new Store("Chicken Licken");
+        chickenLicken.addItem(new FoodItem("Hotwings 12", 109.00, true));
+        chickenLicken.addItem(new FoodItem("Soul Mates Classic Party", 195.00, true));
+        chickenLicken.addItem(new FoodItem("Hotwings Meal 8 Max", 120.00, false));
 
-        // Create stores
-        Store[] stores = {
-                new Store("KFC", kfcMenu),
-                new Store("Nandos", nandosMenu),
-                new Store("Chicken Licken", chickenLickenMenu)
-        };
+        stores.add(kfc);
+        stores.add(nandos);
+        stores.add(chickenLicken);
 
-        // Show store options
-        System.out.println("Available stores:");
-        for (int i = 0; i < stores.length; i++) {
-            System.out.println((i + 1) + ". " + stores[i].getName());
+        // Show stores
+        System.out.println("Available Stores:");
+        for (int i = 0; i < stores.size(); i++) {
+            System.out.println((i + 1) + ". " + stores.get(i).getName());
         }
 
-        // User picks a store
-        System.out.print("Enter store number (1-" + stores.length + "): ");
+        // Pick a store
+        System.out.print("Choose a store (1-" + stores.size() + "): ");
         int storeChoice = scanner.nextInt() - 1;
         Store selectedStore = null;
 
-        if (storeChoice >= 0 && storeChoice < stores.length) {
-            selectedStore = stores[storeChoice];
+        if (storeChoice >= 0 && storeChoice < stores.size()) {
+            selectedStore = stores.get(storeChoice);
         } else {
             System.out.println("Invalid store choice!");
             scanner.close();
             return;
         }
 
-        // Order logic with methods
-        System.out.println("You chose: " + selectedStore.getName());
+        System.out.println("\nYou chose: " + selectedStore.getName());
+        System.out.println("Before cleanup:");
+        selectedStore.displayMenu();
+
+        selectedStore.removeUnavailableItems();
+        System.out.println("\nAfter cleanup:");
         selectedStore.displayMenu();
 
         System.out.print("How many items to order? ");
         int numItems = scanner.nextInt();
-        scanner.nextLine(); // Clear buffer
+        scanner.nextLine();
         String[] orderItems = new String[numItems];
 
         for (int i = 0; i < numItems; i++) {
@@ -138,13 +145,12 @@ public class FoodieOnline {
             orderItems[i] = scanner.nextLine();
         }
 
-        // Use both methods
         double total = 0.0;
         for (String item : orderItems) {
             if (selectedStore.isItemAvailable(item)) {
                 total = selectedStore.calculateOrderTotal(orderItems);
                 System.out.println("Order placed for: " + String.join(", ", orderItems));
-                break; // Exit after valid order
+                break;
             } else {
                 System.out.println("Sorry, " + item + " is unavailable or invalid!");
             }
