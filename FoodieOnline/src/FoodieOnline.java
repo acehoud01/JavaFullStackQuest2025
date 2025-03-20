@@ -1,14 +1,16 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 /**
- * Note: Progress as of Day 12 (March 18th, 2025) of Week 3: Collections.
- * Current state: Multiple stores with ArrayList, operations (remove unavailable items)
+ * Note: Progress as of Day 13 (March 19th, 2025) of Week 3: Collections.
+ * Current state: HashMap for stores, ArrayList operations (remove unavailable items)
  * added to ArrayList menus, methods, arrays, encapsulation, Scanner input, switch
  * selection, OOP, syntax, variables, data types, operators, string manipulation,
  * and control flow.
  */
-public class FoodieOnline{
+public class FoodieOnline
+000{
     static class FoodItem {
         private String name;
         private double price;
@@ -85,10 +87,10 @@ public class FoodieOnline{
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Welcome to FoodieOnline!");
+        System.out.println("Welcome to UberEats clone!");
 
-        // Multiple stores with ArrayList
-        ArrayList<Store> stores = new ArrayList<>();
+        // HashMap for stores
+        HashMap<String, Store> stores = new HashMap<>();
         Store kfc = new Store("KFC");
         kfc.addItem(new FoodItem("Streetwise Three with pap", 49.90, true));
         kfc.addItem(new FoodItem("Streetwise Bucket For 1", 49.90, false));
@@ -104,23 +106,25 @@ public class FoodieOnline{
         chickenLicken.addItem(new FoodItem("Soul Mates Classic Party", 195.00, true));
         chickenLicken.addItem(new FoodItem("Hotwings Meal 8 Max", 120.00, false));
 
-        stores.add(kfc);
-        stores.add(nandos);
-        stores.add(chickenLicken);
+        stores.put("KFC", kfc);
+        stores.put("Nandos", nandos);
+        stores.put("Chicken Licken", chickenLicken);
 
         // Show stores
         System.out.println("Available Stores:");
-        for (int i = 0; i < stores.size(); i++) {
-            System.out.println((i + 1) + ". " + stores.get(i).getName());
+        int index = 1;
+        for (String storeName : stores.keySet()) {
+            System.out.println(index++ + ". " + storeName);
         }
 
         // Pick a store
         System.out.print("Choose a store (1-" + stores.size() + "): ");
         int storeChoice = scanner.nextInt() - 1;
+        scanner.nextLine(); // Clear buffer
         Store selectedStore = null;
 
         if (storeChoice >= 0 && storeChoice < stores.size()) {
-            selectedStore = stores.get(storeChoice);
+            selectedStore = new ArrayList<>(stores.values()).get(storeChoice); // Convert to list for index
         } else {
             System.out.println("Invalid store choice!");
             scanner.close();
