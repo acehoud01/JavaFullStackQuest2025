@@ -9,8 +9,7 @@ import java.util.Scanner;
  * selection, OOP, syntax, variables, data types, operators, string manipulation,
  * and control flow.
  */
-public class FoodieOnline
-000{
+public class FoodieOnline {
     static class FoodItem {
         private String name;
         private double price;
