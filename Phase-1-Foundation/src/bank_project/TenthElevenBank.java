@@ -1,246 +1,200 @@
 package bank_project;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
+
 /**
- * Note: This is a build-up project for learning Java Full-Stack development.
- * It represents progress as of Day 10 (March 14th, 2025) of Week 2: Java Fundamentals.
- * Features will expand as new concepts (e.g., Collections, APIs) are learned.
- * <p>
- * Current state: Transaction history (array-based) added to encapsulation, Scanner,
- * login system, menu-driven CLI, OOP, syntax, variables, data types, operators,
- * control flow, methods, and string manipulation.
+ * Note: Progress as of Day 16 (March 22nd, 2025) of Week 3: Collections.
+ * Current state: Completed TenthElevenBank with HashMap for accounts (ID -> Account object),
+ * ArrayList for transaction history per account, full banking flow (create, deposit, withdraw,
+ * view history, check balance, delete account). Features: Encapsulation with public/private
+ * methods, Scanner input, switch-based CLI menu, OOP (Account class), string manipulation,
+ * variables, data types, operators, and control flow. Week 3 complete: TriviaGame, UberEats Clone,
+ * TenthElevenBank—all done!
  */
-
-public class TenthElevenBank {    // Inner class representing a Current Account
-    static class CurrentAccount {
-        // Private fields for account details
-        private String name;
-        private String surname;
-        private String title;
-        private long accountNumber;
+public class TenthElevenBank {
+    static class Account {
+        private String accountHolder;
         private double balance;
-        private int pin;
-        private String[] transactionHistory; // New array for history
-        private int transactionCount; // Track number of transactions;
+        private ArrayList<String> transactions;
 
-        // Constructor to initialize account details
-        public CurrentAccount(String name, String surname, String title,
-                              long accountNumber, double balance, int pin) {
-            this.name = name;
-            this.surname = surname;
-            this.title = title;
-            setAccountNumber(accountNumber); // Validate and set account number
+        public Account(String accountHolder, double balance) {
+            this.accountHolder = accountHolder;
             this.balance = balance;
-            setPin(pin); // Validate and set PIN
-            this.transactionHistory = new String[10]; // Fixed size for now
-            this.transactionCount = 0; // Start at 0
+            this.transactions = new ArrayList<>();
+            transactions.add("Initial deposit: R" + String.format("%.2f", balance));
         }
 
-        // Getters & Setters
-        public String getName() { return name; }
-        public void setName(String name) { this.name = name; }
-        public String getSurname() { return surname; }
-        public void setSurname(String surname) { this.surname = surname; }
-        public String getTitle() { return title; }
-        public void setTitle(String title) { this.title = title; }
-
-        // Getter and setter for account number with validation
-        public long getAccountNumber() { return accountNumber; }
-        public void setAccountNumber(long accountNumber) {
-            String acc = Long.toString(accountNumber);
-            if (acc.length() == 10) { // Ensure account number is exactly 10 digits
-                this.accountNumber = accountNumber;
-            } else {
-                System.out.println("Account number must be 10 digits!");
-                this.accountNumber = 0; // Set to 0 if invalid
-            }
-        }
-
-        // Getter and setter for balance with validation
+        public String getAccountHolder() { return accountHolder; }
         public double getBalance() { return balance; }
-        public void setBalance(double balance) {
-            if (balance >= 0) this.balance = balance; // Ensure balance is non-negative
-        }
+        public ArrayList<String> getTransactions() { return transactions; }
 
-        // Getter and setter for PIN with validation
-        public int getPin() { return pin; }
-        public void setPin(int pin) {
-            String pinNum = Integer.toString(pin);
-            if (pinNum.length() == 5) { // Ensure PIN is exactly 5 digits
-                this.pin = pin;
-            } else {
-                System.out.println("PIN must be 5 digits!");
-                this.pin = 0; // Set to 0 if invalid
-            }
-        }
-
-        public void logTransaction(String description, double amount, double newBalance) {
-            if (transactionCount <= transactionHistory.length) {
-                String entry = String.format("2025-03-14   %-20s R%.2f     R%.2f", description, amount, newBalance); // date fixed for now
-                transactionHistory[transactionCount] = entry;
-                transactionCount++;
-            } else {
-                System.out.println("Transaction history full!");
-            }
-        }
-
-        // Placeholder methods for future features
-//        public void openAccount() {}
-//        public void closeAccount() {}
-//        public void addSavingsAccount() {}
-//        public void applyForCredit() {}
-
-
-
-        // Method to display account details
-        public void viewAccount() {
-            System.out.println("Account Number: " + accountNumber + "\n" +
-                    "Available Balance: R" + String.format("%.2f", balance));
-        }
-
-        // Method to deposit money into the account
-        public void deposit(Scanner input) { // Reuse Scanner for input
-            System.out.print("Enter the amount to deposit: ");
-            double amount = input.nextDouble();
-            if (amount > 0) { // Validate deposit amount
+        public void deposit(double amount) {
+            if (amount > 0) {
                 balance += amount;
-                logTransaction("ATM Deposit", amount, balance); // Log it!
-                System.out.printf("Deposit successful. New balance: R%.2f\n", balance);
+                transactions.add("Deposit: R" + String.format("%.2f", amount));
+                System.out.printf("Deposited R%.2f. New balance: R%.2f\n", amount, balance);
             } else {
-                System.out.println("Invalid amount. Deposit failed.");
+                System.out.println("Invalid deposit amount!");
             }
         }
 
-        // Method to withdraw money from the account
-        public void withdraw(Scanner input) { // Reuse Scanner for input
-            System.out.print("Enter amount to withdraw: ");
-            double amount = input.nextDouble();
-            if (amount > 0 && amount <= balance) { // Validate withdrawal amount
+        public void withdraw(double amount) {
+            if (amount > 0 && amount <= balance) {
                 balance -= amount;
-                logTransaction("ATM Withdrawal", amount, balance); // Log it!
-                System.out.printf("Withdrawal successful! Available balance: R%.2f\n", balance);
-            } else if (amount <= 0) {
-                System.out.println("Invalid amount! Must be positive.");
+                transactions.add("Withdrawal: R" + String.format("%.2f", amount));
+                System.out.printf("Withdrew R%.2f. New balance: R%.2f\n", amount, balance);
             } else {
-                System.out.println("Insufficient funds!");
-            }
-        }
-
-        // Transaction Method
-        public void viewTransactionHistory() {
-            System.out.println("Transaction History:");
-            System.out.println("Date         Description          Amount     Balance");
-            if (transactionCount == 0) {
-                System.out.println("All transaction will be displayed here");
-                return;
-            } else {
-                for (int i = 0; i < transactionCount; i++) {
-                    System.out.println(transactionHistory[i]);
-                }
+                System.out.println("Invalid withdrawal—check amount or balance!");
             }
         }
     }
 
-    public static void pauseExecution(Scanner scanner) {
-        System.out.println("\nPress Enter to continue...");
-        scanner.nextLine(); // Extra nextLine() to consume any leftover newline
-        scanner.nextLine(); // This will wait for user input
+    private Scanner scanner;
+    private HashMap<Integer, Account> accounts;
+    private int nextAccountId;
+
+    public TenthElevenBank() {
+        this.scanner = new Scanner(System.in);
+        this.accounts = new HashMap<>();
+        this.nextAccountId = 1001;
+        setupTestAccounts();
     }
 
-    public static void clearScreen() {
-        try {
-            String operatingSystem = System.getProperty("os.name");
+    private void setupTestAccounts() {
+        accounts.put(1001, new Account("Dollar Bill", 500.00));
+        accounts.put(1002, new Account("Siya Kolisi", 1000.00));
+    }
 
-            if (operatingSystem.contains("Windows")) {
-                // For Windows
-                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-            } else {
-                // For Unix/Linux/MacOS
-                System.out.print("\033[H\033[2J");
-                System.out.flush();
+    public void createAccount() {
+        System.out.print("Enter account holder name: ");
+        String name = scanner.nextLine();
+        System.out.print("Enter initial deposit (R): ");
+        double deposit = scanner.nextDouble();
+        scanner.nextLine();
+        accounts.put(nextAccountId, new Account(name, deposit));
+        System.out.println("Account created! ID: " + nextAccountId);
+        nextAccountId++;
+    }
 
-                // Alternative approach for Unix systems
-                // new ProcessBuilder("clear").inheritIO().start().waitFor();
-            }
-        } catch (Exception e) {
-            // Fallback if the above doesn't work
-            for (int i = 0; i < 50; i++) {
-                System.out.println();
-            }
+    public void performDeposit() {
+        System.out.print("Enter account ID: ");
+        int id = scanner.nextInt();
+        Account acc = accounts.get(id);
+        if (acc != null) {
+            System.out.print("Enter deposit amount (R): ");
+            double amount = scanner.nextDouble();
+            acc.deposit(amount);
+        } else {
+            System.out.println("Account not found!");
         }
+        scanner.nextLine();
     }
-    // Main method to run the program
+
+    public void performWithdraw() {
+        System.out.print("Enter account ID: ");
+        int id = scanner.nextInt();
+        Account acc = accounts.get(id);
+        if (acc != null) {
+            System.out.print("Enter withdrawal amount (R): ");
+            double amount = scanner.nextDouble();
+            acc.withdraw(amount);
+        } else {
+            System.out.println("Account not found!");
+        }
+        scanner.nextLine();
+    }
+
+    public void viewHistory() {
+        System.out.print("Enter account ID: ");
+        int id = scanner.nextInt();
+        Account acc = accounts.get(id);
+        if (acc != null) {
+            System.out.println("\nTransaction History for " + acc.getAccountHolder() + " (ID: " + id + "):");
+            int index = 0;
+            for (String trans : acc.getTransactions()) {
+                System.out.println(++index + ". " + trans);
+            }
+        } else {
+            System.out.println("Account not found!");
+        }
+        scanner.nextLine();
+    }
+
+    public void checkBalance() {
+        System.out.print("Enter account ID: ");
+        int id = scanner.nextInt();
+        Account acc = accounts.get(id);
+        if (acc != null) {
+            System.out.printf("\nBalance for %s (ID: %d): R%.2f\n",
+                    acc.getAccountHolder(), id, acc.getBalance());
+        } else {
+            System.out.println("Account not found!");
+        }
+        scanner.nextLine();
+    }
+
+    public void deleteAccount() {
+        System.out.print("Enter account ID to delete: ");
+        int id = scanner.nextInt();
+        Account acc = accounts.remove(id);
+        if (acc != null) {
+            System.out.println("Account for " + acc.getAccountHolder() + " (ID: " + id + ") deleted!");
+        } else {
+            System.out.println("Account not found!");
+        }
+        scanner.nextLine();
+    }
+
     public static void main(String[] args) {
-        Scanner input = new Scanner(System.in);
-        // Create a test account with sample data
-        CurrentAccount test = new CurrentAccount("Anele", "Billy", "Mr", 1234567890L, 500.00, 12345);
-        System.out.println("Welcome to TenthElevenBank");
+        TenthElevenBank bank = new TenthElevenBank();
+        System.out.println("Welcome to TenthElevenBank!");
 
-        boolean isLoggedIn = false; // Track login status
-        int pinTries = 0; // Track number of login attempts
-
-        // Login Loop
-        while (pinTries < 3 && !isLoggedIn) {
-            System.out.print("Please enter your Account Number: ");
-            long userAcc = input.nextLong();
-            System.out.print("Please enter your PIN: ");
-            int userPin = input.nextInt();
-
-            // Validate account number and PIN
-            if (userAcc == test.getAccountNumber() && userPin == test.getPin()) {
-                isLoggedIn = true; // Successful login
-                System.out.println("Welcome " + test.getTitle() + " " + test.getSurname());
-            } else {
-                pinTries++; // Increment failed attempts
-                System.out.println("Incorrect account number or PIN. " + (3 - pinTries) + " tries left.");
-            }
-        }
-
-        // Block account if login fails after 3 attempts
-        if (!isLoggedIn) {
-            System.out.println("Account blocked after 3 failed attempts.");
-            input.close(); // Close Scanner
-            return; // Exit program
-        }
-
-        // Menu Loop
         while (true) {
-            System.out.println("\nChoose one of the following options:");
-            System.out.println("1. View Account Details\n2. Deposit\n3. Withdraw\n4. View Transaction History\n5. Exit");
-            System.out.print("Enter option: ");
-            int option = input.nextInt();
+            System.out.println("\n1. Create Account");
+            System.out.println("2. Deposit");
+            System.out.println("3. Withdraw");
+            System.out.println("4. View History");
+            System.out.println("5. Check Balance");
+            System.out.println("6. Delete Account");
+            System.out.println("7. Quit");
+            System.out.print("Choose: ");
+            int choice = bank.scanner.nextInt();
+            bank.scanner.nextLine();
 
-            // Handle user menu selection
-            switch (option) {
+            switch (choice) {
                 case 1:
-                    clearScreen();
-                    test.viewAccount(); // Display account details
-                    pauseExecution(input);
+                    bank.createAccount();
                     break;
                 case 2:
-                    clearScreen();
-                    test.deposit(input); // Deposit money
-                    pauseExecution(input);
+                    bank.performDeposit();
                     break;
                 case 3:
-                    clearScreen();
-                    test.withdraw(input); // Withdraw money
-                    pauseExecution(input);
+                    bank.performWithdraw();
                     break;
                 case 4:
-                    clearScreen();
-                    test.viewTransactionHistory(); // New option!
-                    pauseExecution(input);
+                    bank.viewHistory();
                     break;
                 case 5:
-                    // Exit program with final balance
-                    System.out.println("Thank you for using TenthEleven.\nAvailable balance: R" +
-                            String.format("%.2f", test.getBalance()));
-                    input.close(); // Close Scanner
-                    return; // Exit program
+                    bank.checkBalance();
+                    break;
+                case 6:
+                    bank.deleteAccount();
+                    break;
+                case 7:
+                    System.out.println("Thanks for banking with us!");
+                    bank.scanner.close();
+                    return;
                 default:
-                    clearScreen();
-                    System.out.println("Invalid option. Please try again.");
-                    pauseExecution(input);
+                    System.out.println("Invalid choice!");
+            }
+
+            System.out.println("\nCurrent Accounts:");
+            int index = 0;
+            for (Integer id : bank.accounts.keySet()) {
+                Account acc = bank.accounts.get(id);
+                System.out.printf("%d. ID: %d, Holder: %s, Balance: R%.2f\n",
+                        ++index, id, acc.getAccountHolder(), acc.getBalance());
             }
         }
     }
