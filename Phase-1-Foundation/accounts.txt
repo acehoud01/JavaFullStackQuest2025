@@ -1,1 +1,20 @@
-"1001, Mick Hank, 500, 1234"
+1001,James Khumalo,36600.00,A,1234
+1002,Nomvula Dlamini,12000.00,A,2345
+1003,Pieter van der Merwe,7250.00,A,3456
+1004,Lerato Molefe,9800.00,A,4567
+1005,Thandiwe Mkhize,11000.00,A,5678
+1006,Johan Botha,13500.00,A,6789
+1007,Nozipho Ndlovu,7600.00,A,7890
+1008,Sipho Mbatha,14200.00,A,8901
+1009,Annette de Klerk,16500.00,A,9012
+1010,Bongani Zulu,9200.00,A,123
+1011,Amahle Xaba,18000.00,S,4321,0.05
+1012,Tebogo Mokwena,12500.00,S,5432,0.04
+1013,Elizabeth van Niekerk,22000.00,S,6543,0.06
+1014,Mandla Cele,15800.00,S,7654,0.03
+1015,Nomsa Mthembu,19500.00,S,8765,0.07
+1016,Jacobus Steyn,14300.00,S,9876,0.05
+1017,Nonhlanhla Ngwenya,11200.00,S,987,0.04
+1018,Katlego Mokoena,16700.00,S,1098,0.05
+1019,Andile Mthethwa,13800.00,S,2109,0.05
+1020,Maria Pretorius,20500.00,S,3210,0.05
