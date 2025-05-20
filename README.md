@@ -92,21 +92,46 @@ Each module contains:
 - 📝 Notes and key concepts
 - ✅ Weekly goals and accomplishments
 
-| Week | Focus Area            | Tasks Completed                                                                     | Weekly Projects                                                              |
-|------|-----------------------|-------------------------------------------------------------------------------------|------------------------------------------------------------------------------|
-| 1    | Java Fundamentals     | - Learned Java syntax, variables, data types (int, double, String, boolean)         | - **Number Checker**: Check if a number is even/odd, positive/negative       |
-|      |                       | - Mastered operators (arithmetic, comparison, logical)                              | - **UberEats Clone**: Basic store selection and ordering system              |
-|      |                       | - Used control flow: if-else, while loops, switch statements                        | - **Day of Week**: Print day using switch                                    |
-|      |                       | - Introduced OOP: classes, objects, encapsulation (private fields, getters/setters) | - **Student Record**: Encapsulated student data                              |                  
-|      |                       | - Implemented Scanner for user input, handled buffer issues                         | - **Fast Food Order Simulator**: Menu ordering with stock management         |
-|      |                       | - Applied program design: prep, test, code approach                                 | - **TenthElevenBank CLI**: Bank account app with login, deposit, withdraw    |
+
+| Week | Focus Area                                                                          | Tasks Completed                                                                   | Weekly Projects       |
+|------|-------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------|-----------------------|
+| 1    | Java Fundamentals                                                                   | - Learned Java syntax, variables, data types (int, double, String, boolean)       | - Number Checker      |
+|      | - Mastered operators (arithmetic, comparison, logical)                              | - UberEats Clone                                                                  |                       |
+|      | - Used control flow: if-else, while loops, switch statements                        | - Day of Week                                                                     |                       |
+|      | - Introduced OOP: classes, objects, encapsulation (private fields, getters/setters) | - Student Record                                                                  |                       |
+|      | - Implemented Scanner for user input, handled buffer issues                         | - Fast Food Order Simulator                                                       |                       |
+|      | - Applied program design: prep, test, code approach                                 | - TenthElevenBank CLI                                                             |                       |
+| 2    | OOP and Arrays                                                                      | - Deepened OOP: inheritance, polymorphism, method overriding                      | - TenthElevenBank CLI |
+|      | - Added ArrayList for dynamic data storage                                          | - UberEats Clone                                                                  |                       |
+|      | - Implemented search/sort on collections                                            | - Car Dealership Simulator                                                        |                       |
+|      | - Enhanced file I/O: read/write to accounts.txt                                     |                                                                                   |                       |
+| 3    | Exception Handling                                                                  | - Added try-catch blocks for error handling (InputMismatchException, IOException) | - TenthElevenBank CLI |
+|      | - Validated user input: PINs, amounts, menu options                                 | - UberEats Clone                                                                  |                       |
+|      | - Improved robustness: handled file not found, invalid formats                      |                                                                                   |                       |
+| 4    | File I/O and Design                                                                 | - Solidified file I/O: accounts.txt for persistence                               | - TenthElevenBank CLI |
+|      | - Designed account types: Account, SavingsAccount (inheritance)                     | - UberEats Clone                                                                  |                       |
+|      | - Added features: login, deposit, withdraw, summary                                 |                                                                                   |                       |
+| 5    | Advanced OOP                                                                        | - Implemented polymorphism: Account/SavingsAccount transactions                   | - TenthElevenBank CLI |
+|      | - Added interest calculation for SavingsAccount                                     | - UberEats Clone                                                                  |                       |
+|      | - Enhanced CLI: search accounts, sort by balance                                    |                                                                                   |                       |
+| 6    | Git and Testing                                                                     | - Set up Git: initialized repo, commits, pushed to GitHub                         | - TenthElevenBank CLI |
+|      | - Added unit tests: deposit, withdraw, login edge cases                             | - UberEats Clone                                                                  |                       |
+|      | - Polished CLI: input validation, error messages                                    |                                                                                   |                       |
+| 7    | MySQL Basics                                                                        | - Installed MySQL, set up root user, created FanClubDB                            | - SpringbokFanClub    |
+|      | - Learned SQL: CREATE, INSERT, SELECT, DELETE, UPDATE, JOIN                         |                                                                                   |                       |
+|      | - Built SpringbokFanClub: fans/players tables, CRUD ops, foreign keys               |                                                                                   |                       |
+|      | - Used JDBC: connected Java to MySQL, handled SQLException                          |                                                                                   |                       |
+| 8    | MySQL Integration                                                                   | - Migrated TenthElevenBank to MySQL: created TenthElevenDB, accounts table        | - TenthElevenBank     |
+|      | - Set up Maven: added mysql-connector-java dependency                               |                                                                                   |                       |
+|      | - Configured bank_user with env vars (DB_USER, DB_PASSWORD) for Git safety          |                                                                                   |                       |
+|      | - Implemented loadAccounts/saveAccounts with JDBC (SELECT, UPDATE, INSERT)          |                                                                                   |                       |
+|      | - Tested deposits/withdrawals, data persistence in MySQL                            |                                                                                   |                       |
 
 ## 📖 How to Explore
 - Each phase folder contains code, notes, and mini-projects.
 - Final projects in `Phase-5-Final-Projects/` will have full READMEs.
 - See `Resources/` for my learning materials.
 
----
 
 ## 💡 Motivation
 Starting as a beginner, I’m tackling this journey to meet the demands of full-stack roles, even without prior experience. This repo is my proof of dedication and growth!
