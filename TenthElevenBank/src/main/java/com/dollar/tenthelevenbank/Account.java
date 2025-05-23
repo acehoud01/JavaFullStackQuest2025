@@ -47,6 +47,6 @@ public class Account {
 
     @Override
     public String toString() {
-        return String.format("ID: %d, Holder: %s, Balance: R%.2f", id, holder, balance);
+        return String.format("Account Number: %d\nAccount Holder: %s\nBalance: R%.2f", id, holder, balance);
     }
 }

@@ -1,13 +1,13 @@
 package com.dollar.tenthelevenbank;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
 /**
- * TenthElevenBank - CLI banking App (MySQL version).
+ * TenthElevenBank - CLI banking app with MySQL backend.
  */
 public class TenthElevenBank {
     private Scanner scanner;
@@ -16,20 +16,58 @@ public class TenthElevenBank {
 
     public TenthElevenBank() {
         scanner = new Scanner(System.in);
-        accounts  = new ArrayList<>();
-        connectToDataBase();
-        loadAccounts();
+        accounts = new ArrayList<>();
+        connectToDatabase();      // Step 1: Establish connection
+        initDatabaseSchema();     // Step 2: Setup tables
+        loadAccounts();           // Step 3: Load data
     }
 
-    private void connectToDataBase() {
-        String url = "jdbc:mysql://localhost:3306/TenthElevenDB?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true";
-        String user = System.getenv("DB_USER");
-        String password = System.getenv("DB_PASSWORD");
+    private void connectToDatabase() {
+        String url = "jdbc:mysql://localhost:3306/TenthElevenDB?useSSL=false&serverTimezone=UTC";
+        String user = "root";
+        String password = "@MainRoot2025#";
+
+        if (user == null || password == null) {
+            System.err.println("ERROR: Set DB_USER and DB_PASSWORD environment variables.");
+            System.exit(1);
+        }
+
         try {
             conn = DriverManager.getConnection(url, user, password);
-            System.out.println("Connected to TenthElevenDB!");
+            System.out.println("✓ Connected to database.");
         } catch (SQLException e) {
-            System.out.println("Connection failed: " + e.getMessage());
+            System.err.println("Connection failed: " + e.getMessage());
+            System.exit(1);
+        }
+    }
+
+    private void initDatabaseSchema() {
+        try (Statement stmt = conn.createStatement()) {
+            // Create accounts table (if missing)
+            stmt.executeUpdate(
+                    "CREATE TABLE IF NOT EXISTS accounts (" +
+                            "id INT PRIMARY KEY, " +
+                            "holder VARCHAR(100) NOT NULL, " +
+                            "balance DECIMAL(15,2) NOT NULL, " +
+                            "type CHAR(1) NOT NULL CHECK (type IN ('A', 'S')), " +
+                            "pin INT NOT NULL, " +
+                            "interestRate DECIMAL(5,2) NULL)"
+            );
+
+            // Create transactions table (if missing)
+            stmt.executeUpdate(
+                    "CREATE TABLE IF NOT EXISTS transactions (" +
+                            "id INT AUTO_INCREMENT PRIMARY KEY, " +
+                            "accountId INT NOT NULL, " +
+                            "type ENUM('DEPOSIT','WITHDRAW','TRANSFER','INTEREST') NOT NULL, " +
+                            "amount DECIMAL(15,2) NOT NULL, " +
+                            "transactionDate DATETIME DEFAULT CURRENT_TIMESTAMP, " +
+                            "FOREIGN KEY (accountId) REFERENCES accounts(id) ON DELETE CASCADE)"
+            );
+
+            System.out.println("✓ Database tables verified.");
+        } catch (SQLException e) {
+            System.err.println("Failed to initialize schema: " + e.getMessage());
             System.exit(1);
         }
     }
@@ -37,7 +75,7 @@ public class TenthElevenBank {
     private void loadAccounts() {
         String sql = "SELECT id, holder, balance, type, pin, interestRate FROM accounts";
         try (Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery(sql)) {
+             ResultSet rs = stmt.executeQuery(sql)) {
             accounts.clear();
             while (rs.next()) {
                 int id = rs.getInt("id");
@@ -45,7 +83,7 @@ public class TenthElevenBank {
                 double balance = rs.getDouble("balance");
                 String type = rs.getString("type");
                 int pin = rs.getInt("pin");
-                Double interestRate = rs.getObject("interestRate", Double.class); // handles null
+                Double interestRate = rs.getObject("interestRate", Double.class);
                 if (type.equals("S")) {
                     accounts.add(new SavingsAccount(id, holder, balance, pin, interestRate != null ? interestRate : 0.0));
                 } else {
@@ -58,13 +96,17 @@ public class TenthElevenBank {
         }
     }
 
-    private void saveAccounts() {
+    private void saveAccountsAndLogTransaction(Account acc, String type, double amount) {
         String updateSql = "UPDATE accounts SET holder = ?, balance = ?, type = ?, pin = ?, interestRate = ? WHERE id = ?";
         String insertSql = "INSERT INTO accounts (id, holder, balance, type, pin, interestRate) VALUES (?, ?, ?, ?, ?, ?)";
-        try (PreparedStatement updateStmt = conn.prepareStatement(updateSql);
-            PreparedStatement insertStmt = conn.prepareStatement(insertSql)) {
-            for (Account acc : accounts) {
-                // Try to update first
+        String transactionSql = "INSERT INTO transactions (accountId, type, amount) VALUES (?, ?, ?)";
+
+        try {
+            conn.setAutoCommit(false);
+            try (PreparedStatement updateStmt = conn.prepareStatement(updateSql);
+                 PreparedStatement insertStmt = conn.prepareStatement(insertSql);
+                 PreparedStatement transactionStmt = conn.prepareStatement(transactionSql)) {
+                // Update or insert account
                 updateStmt.setString(1, acc.getHolder());
                 updateStmt.setDouble(2, acc.getBalance());
                 updateStmt.setString(3, acc instanceof SavingsAccount ? "S" : "A");
@@ -77,7 +119,6 @@ public class TenthElevenBank {
                 updateStmt.setInt(6, acc.getId());
                 int rows = updateStmt.executeUpdate();
 
-                // If update fails (account not in DB), insert
                 if (rows == 0) {
                     insertStmt.setInt(1, acc.getId());
                     insertStmt.setString(2, acc.getHolder());
@@ -91,10 +132,47 @@ public class TenthElevenBank {
                     }
                     insertStmt.executeUpdate();
                 }
+
+                // Log transaction (let DB set transactionDate)
+                transactionStmt.setInt(1, acc.getId());
+                transactionStmt.setString(2, type);
+                transactionStmt.setDouble(3, amount);
+                transactionStmt.executeUpdate();
+
+                conn.commit();
+                System.out.println("Saved account and logged transaction: " + type + " of R" + amount + " for account " + acc.getId());
+            } catch (SQLException e) {
+                conn.rollback();
+                System.out.println("Transaction failed, rolled back: " + e.getMessage());
+            } finally {
+                conn.setAutoCommit(true);
             }
-            System.out.println("Saved " + accounts.size() + " accounts.");
         } catch (SQLException e) {
-            System.out.println("Save accounts failed: " + e.getMessage());
+            System.out.println("Transaction setup failed: " + e.getMessage());
+        }
+    }
+
+    private void viewTransactions(int accountId) {
+        String sql = "SELECT id, type, amount, transactionDate FROM transactions WHERE accountId = ? ORDER BY transactionDate DESC";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, accountId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                System.out.println("\nTransaction History for Account " + accountId + ":");
+                boolean hasTransactions = false;
+                while (rs.next()) {
+                    hasTransactions = true;
+                    int id = rs.getInt("id");
+                    String type = rs.getString("type");
+                    double amount = rs.getDouble("amount");
+                    Timestamp date = rs.getTimestamp("transactionDate");
+                    System.out.printf("ID: %d, Type: %s, Amount: R%.2f, Date: %s%n", id, type, amount, date);
+                }
+                if (!hasTransactions) {
+                    System.out.println("No transactions found.");
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Failed to view transactions: " + e.getMessage());
         }
     }
 
@@ -103,7 +181,7 @@ public class TenthElevenBank {
         int id;
         try {
             id = scanner.nextInt();
-        } catch (InputMismatchException e) {
+        } catch (java.util.InputMismatchException e) {
             scanner.nextLine();
             System.out.println("Invalid ID!");
             return null;
@@ -112,17 +190,32 @@ public class TenthElevenBank {
         int pin;
         try {
             pin = scanner.nextInt();
-        } catch (InputMismatchException e) {
+        } catch (java.util.InputMismatchException e) {
             scanner.nextLine();
             System.out.println("Invalid PIN!");
             return null;
         }
         scanner.nextLine();
 
-        for (Account acc : accounts) {
-            if (acc.getId() == id && acc.getPin() == pin) {
-                return acc;
+        String sql = "SELECT id, holder, balance, type, pin, interestRate FROM accounts WHERE id = ? AND pin = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, id);
+            pstmt.setInt(2, pin);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    String holder = rs.getString("holder");
+                    double balance = rs.getDouble("balance");
+                    String type = rs.getString("type");
+                    Double interestRate = rs.getObject("interestRate", Double.class);
+                    if (type.equals("S")) {
+                        return new SavingsAccount(id, holder, balance, pin, interestRate != null ? interestRate : 0.0);
+                    } else {
+                        return new Account(id, holder, balance, pin);
+                    }
+                }
             }
+        } catch (SQLException e) {
+            System.out.println("Login failed: " + e.getMessage());
         }
         System.out.println("Invalid ID or PIN!");
         return null;
@@ -153,7 +246,8 @@ public class TenthElevenBank {
                         System.out.println("1. Deposit");
                         System.out.println("2. Withdraw");
                         System.out.println("3. View Balance");
-                        System.out.println("4. Logout");
+                        System.out.println("4. View Transactions");
+                        System.out.println("5. Logout");
                         System.out.print("Choose an option: ");
 
                         int subChoice;
@@ -177,7 +271,7 @@ public class TenthElevenBank {
                                 continue;
                             }
                             if (acc.deposit(amount)) {
-                                saveAccounts();
+                                saveAccountsAndLogTransaction(acc, "DEPOSIT", amount);
                                 System.out.println("Deposited R" + amount);
                             } else {
                                 System.out.println("Invalid deposit amount!");
@@ -193,7 +287,7 @@ public class TenthElevenBank {
                                 continue;
                             }
                             if (acc.withdraw(amount)) {
-                                saveAccounts();
+                                saveAccountsAndLogTransaction(acc, "WITHDRAW", amount);
                                 System.out.println("Withdrew R" + amount);
                             } else {
                                 System.out.println("Invalid withdrawal amount or insufficient funds!");
@@ -201,6 +295,8 @@ public class TenthElevenBank {
                         } else if (subChoice == 3) {
                             System.out.println(acc);
                         } else if (subChoice == 4) {
+                            viewTransactions(acc.getId());
+                        } else if (subChoice == 5) {
                             break;
                         } else {
                             System.out.println("Invalid option!");
