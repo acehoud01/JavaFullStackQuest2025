@@ -24,8 +24,8 @@ public class TenthElevenBank {
 
     private void connectToDatabase() {
         String url = "jdbc:mysql://localhost:3306/TenthElevenDB?useSSL=false&serverTimezone=UTC";
-        String user = "root";
-        String password = "@MainRoot2025#";
+        String user = System.getenv("DB_USER");
+        String password = System.getenv("DB_PASSWORD");
 
         if (user == null || password == null) {
             System.err.println("ERROR: Set DB_USER and DB_PASSWORD environment variables.");
