@@ -17,57 +17,34 @@ public class TenthElevenBank {
     public TenthElevenBank() {
         scanner = new Scanner(System.in);
         accounts = new ArrayList<>();
-        connectToDatabase();      // Step 1: Establish connection
-        initDatabaseSchema();     // Step 2: Setup tables
-        loadAccounts();           // Step 3: Load data
+        connectToDatabase();
+        loadAccounts();
     }
 
     private void connectToDatabase() {
         String url = "jdbc:mysql://localhost:3306/TenthElevenDB?useSSL=false&serverTimezone=UTC";
         String user = System.getenv("DB_USER");
         String password = System.getenv("DB_PASSWORD");
-
         if (user == null || password == null) {
-            System.err.println("ERROR: Set DB_USER and DB_PASSWORD environment variables.");
+            System.out.println("DB_USER or DB_PASSWORD not set in environment!");
             System.exit(1);
         }
-
         try {
             conn = DriverManager.getConnection(url, user, password);
-            System.out.println("✓ Connected to database.");
+            System.out.println("Connected to TenthElevenDB!");
+            String createTableSql = "CREATE TABLE IF NOT EXISTS transactions (" +
+                    "id INT AUTO_INCREMENT PRIMARY KEY, " +
+                    "accountId INT NOT NULL, " +
+                    "type VARCHAR(10) NOT NULL, " +
+                    "amount DOUBLE NOT NULL, " +
+                    "transactionDate DATETIME NOT NULL, " +
+                    "FOREIGN KEY (accountId) REFERENCES accounts(id))";
+            try (Statement stmt = conn.createStatement()) {
+                stmt.executeUpdate(createTableSql);
+                System.out.println("Transactions table ready!");
+            }
         } catch (SQLException e) {
-            System.err.println("Connection failed: " + e.getMessage());
-            System.exit(1);
-        }
-    }
-
-    private void initDatabaseSchema() {
-        try (Statement stmt = conn.createStatement()) {
-            // Create accounts table (if missing)
-            stmt.executeUpdate(
-                    "CREATE TABLE IF NOT EXISTS accounts (" +
-                            "id INT PRIMARY KEY, " +
-                            "holder VARCHAR(100) NOT NULL, " +
-                            "balance DECIMAL(15,2) NOT NULL, " +
-                            "type CHAR(1) NOT NULL CHECK (type IN ('A', 'S')), " +
-                            "pin INT NOT NULL, " +
-                            "interestRate DECIMAL(5,2) NULL)"
-            );
-
-            // Create transactions table (if missing)
-            stmt.executeUpdate(
-                    "CREATE TABLE IF NOT EXISTS transactions (" +
-                            "id INT AUTO_INCREMENT PRIMARY KEY, " +
-                            "accountId INT NOT NULL, " +
-                            "type ENUM('DEPOSIT','WITHDRAW','TRANSFER','INTEREST') NOT NULL, " +
-                            "amount DECIMAL(15,2) NOT NULL, " +
-                            "transactionDate DATETIME DEFAULT CURRENT_TIMESTAMP, " +
-                            "FOREIGN KEY (accountId) REFERENCES accounts(id) ON DELETE CASCADE)"
-            );
-
-            System.out.println("✓ Database tables verified.");
-        } catch (SQLException e) {
-            System.err.println("Failed to initialize schema: " + e.getMessage());
+            System.out.println("Connection failed: " + e.getMessage());
             System.exit(1);
         }
     }
@@ -99,14 +76,13 @@ public class TenthElevenBank {
     private void saveAccountsAndLogTransaction(Account acc, String type, double amount) {
         String updateSql = "UPDATE accounts SET holder = ?, balance = ?, type = ?, pin = ?, interestRate = ? WHERE id = ?";
         String insertSql = "INSERT INTO accounts (id, holder, balance, type, pin, interestRate) VALUES (?, ?, ?, ?, ?, ?)";
-        String transactionSql = "INSERT INTO transactions (accountId, type, amount) VALUES (?, ?, ?)";
+        String transactionSql = "INSERT INTO transactions (accountId, type, amount, transactionDate) VALUES (?, ?, ?, ?)";
 
         try {
             conn.setAutoCommit(false);
             try (PreparedStatement updateStmt = conn.prepareStatement(updateSql);
                  PreparedStatement insertStmt = conn.prepareStatement(insertSql);
                  PreparedStatement transactionStmt = conn.prepareStatement(transactionSql)) {
-                // Update or insert account
                 updateStmt.setString(1, acc.getHolder());
                 updateStmt.setDouble(2, acc.getBalance());
                 updateStmt.setString(3, acc instanceof SavingsAccount ? "S" : "A");
@@ -133,10 +109,10 @@ public class TenthElevenBank {
                     insertStmt.executeUpdate();
                 }
 
-                // Log transaction (let DB set transactionDate)
                 transactionStmt.setInt(1, acc.getId());
                 transactionStmt.setString(2, type);
                 transactionStmt.setDouble(3, amount);
+                transactionStmt.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()));
                 transactionStmt.executeUpdate();
 
                 conn.commit();
@@ -174,6 +150,30 @@ public class TenthElevenBank {
         } catch (SQLException e) {
             System.out.println("Failed to view transactions: " + e.getMessage());
         }
+    }
+
+    private Account getAccountById(int id) {
+        String sql = "SELECT id, holder, balance, type, pin, interestRate FROM accounts WHERE id = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, id);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    String holder = rs.getString("holder");
+                    double balance = rs.getDouble("balance");
+                    String type = rs.getString("type");
+                    int pin = rs.getInt("pin");
+                    Double interestRate = rs.getObject("interestRate", Double.class);
+                    if (type.equals("S")) {
+                        return new SavingsAccount(id, holder, balance, pin, interestRate != null ? interestRate : 0.0);
+                    } else {
+                        return new Account(id, holder, balance, pin);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Failed to fetch account: " + e.getMessage());
+        }
+        return null;
     }
 
     private Account login() {
